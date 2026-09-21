@@ -517,7 +517,7 @@
   }
   .layer-item:not(.checked-on) .toggle-row{ color:var(--gray-400); }
   .opacity-row{ gap:12px; }
-  /* drawn by hand so every slider looks the same: grey track, layer-colour fill, white handle */
+  /* drawn by hand so every slider looks the same: white track, layer-colour fill, white handle */
   .opacity-row input[type=range]{
     --fill:var(--layer-color, var(--green));
     -webkit-appearance:none; appearance:none;
@@ -526,9 +526,9 @@
   }
   .opacity-row input[type=range]::-webkit-slider-runnable-track{
     height:4px; border-radius:2px;
-    background:linear-gradient(to right, var(--fill) var(--pct, 100%), var(--gray-200) var(--pct, 100%));
+    background:linear-gradient(to right, var(--fill) var(--pct, 100%), #fff var(--pct, 100%));
   }
-  .opacity-row input[type=range]::-moz-range-track{ height:4px; border-radius:2px; background:var(--gray-200); }
+  .opacity-row input[type=range]::-moz-range-track{ height:4px; border-radius:2px; background:#fff; }
   .opacity-row input[type=range]::-moz-range-progress{ height:4px; border-radius:2px; background:var(--fill); }
   .opacity-row input[type=range]::-webkit-slider-thumb{
     -webkit-appearance:none; appearance:none;
