@@ -346,8 +346,8 @@
   }
   .icon-act{ color:var(--gray-500); }
   .icon-act:hover{ background:var(--gray-100); color:var(--ink); }
-  .icon-act:hover .fold-tip,
   .icon-act:focus-visible .fold-tip{ opacity:1; }
+  @media (hover:hover){ .icon-act:hover .fold-tip{ opacity:1; } }
   .fold-tip b{ font-weight:600; }
 
   .sort-wrap{ position:relative; }
@@ -516,6 +516,13 @@
     color:var(--gray-700);
   }
   .layer-item:not(.checked-on) .toggle-row{ color:var(--gray-400); }
+  .opacity-row{ gap:12px; }
+  .opacity-row input[type=range]{
+    flex:1; min-width:0; height:20px; margin:0;
+    accent-color:var(--layer-color, var(--green)); cursor:pointer;
+  }
+  .opacity-row output{ width:36px; text-align:right; font-variant-numeric:tabular-nums; color:var(--gray-500); }
+  .layer-item:not(.checked-on) .opacity-row input{ opacity:.45; pointer-events:none; }
   .toggle{
     width:28px; height:16px;
     border-radius:8px;
@@ -615,8 +622,8 @@
     pointer-events:none;
     transition:opacity .12s ease;
   }
-  .fold-btn:hover .fold-tip,
   .fold-btn:focus-visible .fold-tip{ opacity:1; }
+  @media (hover:hover){ .fold-btn:hover .fold-tip{ opacity:1; } }
 
   .selection-bar{
     display:none;
@@ -2041,6 +2048,21 @@
     });
   }
 
+  // scale every drawn part of a layer; fills keep their own base transparency
+  const layerOpacity = {};
+  function setLayerOpacity(key, pct){
+    layerOpacity[key] = pct;
+    if(!mapReady) return;
+    const k = pct / 100;
+    const set = (id, prop, val) => { if(map.getLayer(id)) map.setPaintProperty(id, prop, val); };
+    set(key + '-fill', 'fill-opacity', ['*', k, ['case', ['==', ['get', 'kind'], 'overlay'], 0.18, 0.30]]);
+    set(key + '-outline', 'line-opacity', k);
+    set(key + '-outline-dash', 'line-opacity', k);
+    set(key + '-line', 'line-opacity', k);
+    set(key + '-point', 'circle-opacity', k);
+    set(key + '-point', 'circle-stroke-opacity', k);
+  }
+
   function setMapSublayer(key, kind, on){
     if(!mapReady) return;
     const id = key + '-' + kind;
@@ -2176,6 +2198,7 @@
     window.addEventListener('resize', syncMapLabels);
 
     mapReady = true;
+    Object.entries(layerOpacity).forEach(([key, pct]) => setLayerOpacity(key, pct));
 
     // frame the project site on load, with room for its surroundings
     const site = CONTEXT.features.find(f => f.properties.kind === 'site');
@@ -2383,6 +2406,26 @@
       setMapSublayer(item.dataset.layer,
         t.dataset.toggle === 'label' ? 'label' : 'numbers', t.classList.contains('on'));
     });
+  });
+
+  // an opacity slider in every layer's details, under the label / number toggles
+  document.querySelectorAll('.layer-item').forEach(item => {
+    const key = item.dataset.layer;
+    const rows = item.querySelectorAll('.layer-detail .toggle-row');
+    if(!rows.length) return;
+    const row = document.createElement('div');
+    row.className = 'toggle-row opacity-row';
+    row.innerHTML = '<span>Opacity</span>' +
+      '<input type="range" min="10" max="100" step="5" value="100" aria-label="' + (LAYER_NAMES[key] || key) + ' opacity">' +
+      '<output>100%</output>';
+    rows[rows.length - 1].after(row);
+    const input = row.querySelector('input'), out = row.querySelector('output');
+    input.addEventListener('input', () => {
+      out.textContent = input.value + '%';
+      setLayerOpacity(key, +input.value);
+    });
+    // dragging the slider must not fold the layer or start a sheet drag
+    ['click', 'pointerdown'].forEach(t => row.addEventListener(t, e => e.stopPropagation()));
   });
 
   // filter dropdown — which categories are listed
