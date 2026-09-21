@@ -517,12 +517,35 @@
   }
   .layer-item:not(.checked-on) .toggle-row{ color:var(--gray-400); }
   .opacity-row{ gap:12px; }
+  /* drawn by hand so every slider looks the same: grey track, layer-colour fill, white handle */
   .opacity-row input[type=range]{
+    --fill:var(--layer-color, var(--green));
+    -webkit-appearance:none; appearance:none;
     flex:1; min-width:0; height:20px; margin:0;
-    accent-color:var(--layer-color, var(--green)); cursor:pointer;
+    background:transparent; cursor:pointer;
   }
+  .opacity-row input[type=range]::-webkit-slider-runnable-track{
+    height:4px; border-radius:2px;
+    background:linear-gradient(to right, var(--fill) var(--pct, 100%), var(--gray-200) var(--pct, 100%));
+  }
+  .opacity-row input[type=range]::-moz-range-track{ height:4px; border-radius:2px; background:var(--gray-200); }
+  .opacity-row input[type=range]::-moz-range-progress{ height:4px; border-radius:2px; background:var(--fill); }
+  .opacity-row input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:16px; height:16px; margin-top:-6px; border-radius:50%;
+    background:#fff; border:2px solid var(--fill);
+    box-shadow:0 1px 3px rgba(20,24,28,.2);
+  }
+  .opacity-row input[type=range]::-moz-range-thumb{
+    width:12px; height:12px; border-radius:50%;
+    background:#fff; border:2px solid var(--fill);
+    box-shadow:0 1px 3px rgba(20,24,28,.2);
+  }
+  .opacity-row input[type=range]:focus-visible{ outline:2px solid var(--green); outline-offset:2px; border-radius:4px; }
   .opacity-row output{ width:36px; text-align:right; font-variant-numeric:tabular-nums; color:var(--gray-500); }
-  .layer-item:not(.checked-on) .opacity-row input{ opacity:.45; pointer-events:none; }
+  /* a switched-off layer's slider is flat grey and inactive */
+  .layer-item:not(.checked-on) .opacity-row input{ --fill:var(--gray-300); pointer-events:none; }
+  .layer-item:not(.checked-on) .opacity-row output{ color:var(--gray-400); }
   .toggle{
     width:28px; height:16px;
     border-radius:8px;
@@ -2422,6 +2445,7 @@
     const input = row.querySelector('input'), out = row.querySelector('output');
     input.addEventListener('input', () => {
       out.textContent = input.value + '%';
+      input.style.setProperty('--pct', ((input.value - input.min) / (input.max - input.min) * 100) + '%');
       setLayerOpacity(key, +input.value);
     });
     // dragging the slider must not fold the layer or start a sheet drag
