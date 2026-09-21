@@ -965,9 +965,9 @@
     margin:0 0 14px;
     border-radius:10px;
     background:none;
-    color:var(--gray-700);
+    color:var(--gray-500);
   }
-  .icon-rail .rail-toggle:hover{ background:var(--gray-100); color:var(--ink); }
+  .icon-rail .rail-toggle:hover{ background:var(--gray-100); color:var(--gray-700); }
   .icon-rail .rail-toggle:focus-visible,
   .icon-rail .rail-item:focus-visible{ outline:2px solid var(--green); outline-offset:2px; }
   .rail-toggle .ico-open{ display:none; }
@@ -988,8 +988,11 @@
     border-radius:10px;
     text-align:center;
   }
-  .icon-rail .rail-item{ color:var(--gray-700); }
-  .icon-rail .rail-item-icon{ width:auto; height:22px; color:inherit; }
+  .icon-rail .rail-item{ color:var(--gray-500); }
+  .icon-rail .rail-item-icon svg,
+  .icon-rail .rail-toggle svg{ width:20px; height:20px; }
+  .icon-rail .rail-item:hover{ color:var(--gray-700); }
+  .icon-rail .rail-item-icon{ width:auto; height:20px; color:inherit; }
   .icon-rail .rail-item.inert .rail-item-icon{ opacity:1; }
   .icon-rail .rail-item.active .rail-item-icon{ color:var(--green); }
   .icon-rail .rail-item-label,
@@ -1358,7 +1361,7 @@
       <div class="filter-row">
         <div class="filter-wrap">
           <button class="filter-pill" id="filterPill" aria-label="Filter categories" aria-haspopup="true" aria-expanded="false" aria-controls="filterMenu">
-            <svg class="pill-icon" width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M200,136a8,8,0,0,1-8,8H64a8,8,0,0,1,0-16H192A8,8,0,0,1,200,136Zm32-56H24a8,8,0,0,0,0,16H232a8,8,0,0,0,0-16Zm-80,96H104a8,8,0,0,0,0,16h48a8,8,0,0,0,0-16Z"/></svg>
+            <svg class="pill-icon" width="18" height="18" viewBox="0 0 256 256" fill="currentColor"><path d="M230.6,49.53A15.81,15.81,0,0,0,216,40H40A16,16,0,0,0,28.19,66.76l.08.09L96,139.17V216a16,16,0,0,0,24.87,13.32l32-21.34A16,16,0,0,0,160,194.66V139.17l67.74-72.32.08-.09A15.8,15.8,0,0,0,230.6,49.53ZM40,56h0Zm106.18,74.58A8,8,0,0,0,144,136v58.66L112,216V136a8,8,0,0,0-2.16-5.47L40,56H216Z"/></svg>
             <span class="pill-val" id="filterCurrent">All</span>
             <svg class="pill-caret" width="12" height="12" viewBox="0 0 256 256" fill="currentColor"><path d="M216.49,104.49l-80,80a12,12,0,0,1-17,0l-80-80a12,12,0,0,1,17-17L128,159l71.51-71.52a12,12,0,0,1,17,17Z"/></svg>
           </button>
