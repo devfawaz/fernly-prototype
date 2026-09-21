@@ -550,7 +550,7 @@
   }
   .opacity-row input[type=range]:focus-visible{ outline:2px solid var(--green); outline-offset:2px; border-radius:4px; }
   .checkbox:focus-visible, .toggle:focus-visible, .layer-row .chev:focus-visible,
-  .section-head:focus-visible{ outline:2px solid var(--green); outline-offset:2px; border-radius:4px; }
+  .section-head:focus-visible, .chart-group-head:focus-visible{ outline:2px solid var(--green); outline-offset:2px; border-radius:4px; }
   .opacity-row output{ width:36px; text-align:right; font-variant-numeric:tabular-nums; color:var(--gray-500); }
   /* a switched-off layer's slider is flat grey and inactive */
   .layer-item:not(.checked-on) .opacity-row input{ --fill:var(--gray-300); pointer-events:none; }
@@ -754,7 +754,7 @@
   .bar-row{ display:grid; grid-template-columns:78px 1fr 30px; align-items:center; gap:9px; padding:3.5px 0; }
   .bar-row .bar-lbl{ font-size:11.5px; color:var(--gray-700); }
   .bar-row .bar-track{ height:8px; border-radius:4px; background:var(--gray-100); overflow:hidden; }
-  .bar-row .bar-fill{ height:100%; border-radius:4px; background:var(--series-1); transition:opacity .12s ease; }
+  .bar-row .bar-fill{ display:block; height:100%; border-radius:4px; background:var(--series-1); transition:opacity .12s ease; }
   .bar-row .bar-val{ font-size:11.5px; color:var(--gray-700); text-align:right; font-variant-numeric:tabular-nums; }
   .bar-row:hover .bar-fill{ opacity:.7; }
 
@@ -3184,15 +3184,17 @@
       item.querySelectorAll('[data-toggle]').forEach(t =>
         make(t, 'switch', (t.dataset.toggle === 'label' ? 'Show labels' : 'Show numbers') + ' for ' + name(item)));
     });
-    document.querySelectorAll('#layers .section-head').forEach(h => make(h, 'button'));
+    document.querySelectorAll('#layers .section-head, #charts .chart-group-head').forEach(h => make(h, 'button'));
 
     // Enter and Space act like a click on all of them
-    document.getElementById('layers').addEventListener('keydown', e => {
+    const press = e => {
       const el = e.target.closest('[role="checkbox"], [role="switch"], [role="button"]');
       if(!el || (e.key !== 'Enter' && e.key !== ' ')) return;
       e.preventDefault();
       el.click();
-    });
+    };
+    document.getElementById('layers').addEventListener('keydown', press);
+    document.getElementById('charts').addEventListener('keydown', press);
 
     // state follows the classes the rest of the code already sets
     function sync(){
@@ -3209,10 +3211,12 @@
       });
       document.querySelectorAll('#layers .section').forEach(sec =>
         sec.querySelector('.section-head').setAttribute('aria-expanded', !sec.classList.contains('collapsed')));
+      document.querySelectorAll('#charts .chart-group').forEach(g =>
+        g.querySelector('.chart-group-head').setAttribute('aria-expanded', !g.classList.contains('collapsed')));
     }
     sync();
-    new MutationObserver(sync).observe(document.getElementById('layers'),
-      { subtree:true, attributes:true, attributeFilter:['class'] });
+    ['layers', 'charts'].forEach(id => new MutationObserver(sync).observe(document.getElementById(id),
+      { subtree:true, attributes:true, attributeFilter:['class'] }));
   })();
 
   applySort('default');
