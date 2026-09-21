@@ -1112,6 +1112,8 @@
       display:flex;
       background:var(--white);
       border-top:1px solid var(--border);
+      box-sizing:content-box;
+      height:var(--navh);
       padding-bottom:env(safe-area-inset-bottom);
     }
     .m-nav-item{
@@ -1137,7 +1139,8 @@
       left:0; right:0; top:auto;
       bottom:calc(var(--navh) + env(safe-area-inset-bottom));
       width:auto; min-width:0;
-      height:calc(74dvh - var(--navh));
+      /* fully open, the sheet reaches the header and covers search + chips */
+      height:calc(100dvh - var(--headerh) - var(--navh) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
       z-index:28;
       border-right:none;
       border-radius:18px 18px 0 0;
@@ -1146,7 +1149,7 @@
       transition:transform .26s cubic-bezier(.32,.72,0,1);
       overscroll-behavior:contain;
     }
-    .sidebar.snap-mid{ transform:translateY(30dvh); }
+    .sidebar.snap-mid{ transform:translateY(38%); }
     .sidebar.snap-full{ transform:translateY(0); }
     .sidebar.dragging{ transition:none; }
 
@@ -1264,7 +1267,7 @@
 
       <div class="rail-logo">
         <div class="rail-logo-mark">
-          <svg width="34" height="34" viewBox="-16 -16 32 32" aria-hidden="true"><g transform="translate(-0.46 -1.02)" fill="#1E8E5A"><g transform="rotate(0)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g><g transform="rotate(72)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g><g transform="rotate(144)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g><g transform="rotate(216)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g><g transform="rotate(288)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g></g></svg>
+          <svg class="brand-mark" width="34" height="34" viewBox="-16 -16 32 32" aria-hidden="true"><g transform="translate(0 1)"><path d="M-3 13V-2C-3 -8.5 1 -12.5 6 -12.5 10.2 -12.5 12.4 -9.4 11.6 -6.4 10.8 -3.6 7.2 -2.8 5.4 -4.9 3.9 -6.6 5 -9 7.2 -8.7" fill="none" stroke="#1E8E5A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M-3 3C-6 3 -9.5 1 -10.5 -2.5 -7 -3 -4 -1.3 -3 1.5Z" fill="#1E8E5A"/><path d="M-3 8.5C0 8.5 3.5 6.6 4.5 3 1 2.5 -2 4.3 -3 7Z" fill="#1E8E5A"/></g></svg>
         </div>
         <div class="rail-logo-text">
           <div class="rail-logo-title">fernly</div>
@@ -1313,7 +1316,7 @@
     <!-- MOBILE HEADER -->
     <header class="m-header">
       <button class="m-back" id="mBack" aria-label="Back to projects" title="Back to projects">
-        <svg width="30" height="30" viewBox="-16 -16 32 32" aria-hidden="true"><g transform="translate(-0.46 -1.02)" fill="#1E8E5A"><g transform="rotate(0)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g><g transform="rotate(72)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g><g transform="rotate(144)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g><g transform="rotate(216)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g><g transform="rotate(288)"><path d="M0 -3.6C0 -7.6 .5 -10.1 2 -11.8 3.6 -13.6 6.6 -13.7 7.5 -11.8 8.3 -10.1 7 -8.5 5.5 -8.8 4.4 -9.1 4.3 -10.4 5.2 -10.8" fill="none" stroke="#1E8E5A" stroke-width="1.5" stroke-linecap="round"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -4.6) scale(-1 1)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0 -6.1) scale(-0.86 0.86)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(-0.0 -7.6) scale(-0.7 0.7)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.28 -9) scale(-0.54 0.54)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(0.4)"/><path d="M0 0C-.4-1.2-1.8-2-3.3-1.9-2.6-.4-1.3.2 0 0Z" transform="translate(0.52 -10.2) scale(-0.4 0.4)"/></g></g></svg>
+        <svg class="brand-mark" width="30" height="30" viewBox="-16 -16 32 32" aria-hidden="true"><g transform="translate(0 1)"><path d="M-3 13V-2C-3 -8.5 1 -12.5 6 -12.5 10.2 -12.5 12.4 -9.4 11.6 -6.4 10.8 -3.6 7.2 -2.8 5.4 -4.9 3.9 -6.6 5 -9 7.2 -8.7" fill="none" stroke="#1E8E5A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M-3 3C-6 3 -9.5 1 -10.5 -2.5 -7 -3 -4 -1.3 -3 1.5Z" fill="#1E8E5A"/><path d="M-3 8.5C0 8.5 3.5 6.6 4.5 3 1 2.5 -2 4.3 -3 7Z" fill="#1E8E5A"/></g></svg>
       </button>
       <div class="m-header-text">
         <div class="m-header-title project-name">Blackwattle Bay Renewal</div>
@@ -2731,32 +2734,47 @@
 
   let dragFrom = null, dragStartY = 0, sheetH = 0;
 
+  // the sheet's current offset from fully open, in px
+  const sheetOffset = () => new DOMMatrixReadOnly(getComputedStyle(sheet).transform).m42;
+  // rest offsets for peek, mid and full, read from the CSS so drag and tap agree
+  function snapOffsets(){
+    const was = sheet.className, t = sheet.style.transform;
+    sheet.classList.add('dragging');
+    sheet.style.transform = '';
+    const out = SNAPS.map(name => {
+      sheet.classList.remove('snap-mid', 'snap-full');
+      if(name !== 'peek') sheet.classList.add(name);
+      return sheetOffset();
+    });
+    sheet.className = was; sheet.style.transform = t;
+    return out;
+  }
+
   grab.addEventListener('pointerdown', e => {
     if(!isMobile()) return;
     grab.setPointerCapture(e.pointerId);
     sheetH = sheet.getBoundingClientRect().height;
     dragStartY = e.clientY;
-    dragFrom = sheet.getBoundingClientRect().top;
+    dragFrom = sheetOffset();
     sheet.classList.add('dragging');
   });
 
   grab.addEventListener('pointermove', e => {
     if(dragFrom === null) return;
-    const top = Math.max(0, dragFrom + (e.clientY - dragStartY));
-    sheet.style.transform = 'translateY(' + top + 'px)';
+    const y = Math.min(sheetH, Math.max(0, dragFrom + (e.clientY - dragStartY)));
+    sheet.style.transform = 'translateY(' + y + 'px)';
   });
 
   function endDrag(e){
     if(dragFrom === null) return;
-    const top = Math.max(0, dragFrom + (e.clientY - dragStartY));
+    const y = Math.max(0, dragFrom + (e.clientY - dragStartY));
     dragFrom = null;
-    sheet.classList.remove('dragging');
     // snap to whichever rest position the sheet was released nearest
-    const vh = window.innerHeight;
-    const targets = [vh - 128, vh * 0.45, 0];
+    const targets = snapOffsets();
+    sheet.classList.remove('dragging');
     let best = 0;
     targets.forEach((t, i) => {
-      if(Math.abs(t - top) < Math.abs(targets[best] - top)) best = i;
+      if(Math.abs(t - y) < Math.abs(targets[best] - y)) best = i;
     });
     setSnap(best);
   }
