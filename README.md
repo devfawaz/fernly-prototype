@@ -50,7 +50,7 @@ The original concept existed only as Figma wireframes. I used Claude Code to tur
 Along the way we:
 - rebuilt the static mock-up as a working MapLibre map with real layer geometry
 - added the responsive mobile layout, bottom sheet and gestures
-- made the filter menu fully keyboard-accessible, and ran a design audit (contrast, tap targets, semantics) and fixed what it found
+- ran a design audit and fixed its main findings: the whole layer list (checkboxes, switches, categories, filter) now works with a keyboard and a screen reader, controls have proper labels, and low-contrast text was darkened
 - iterated on details in quick loops: the rail, the top bar, chip colours, and a logo that went through several rounds
 - published it with GitHub Pages
 
