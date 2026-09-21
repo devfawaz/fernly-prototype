@@ -429,6 +429,7 @@
   .section-head .grip:hover{ color:var(--gray-700); }
   .section-head:hover .grip{ color:var(--gray-500); }
   .section-head .grip:active{ cursor:grabbing; }
+  .section-head .grip{ touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
   .section.dragging .section-head .grip{ color:var(--green); }
   .section-head{
     display:flex;
@@ -1229,6 +1230,8 @@
     .layers{ padding:0 14px; }
     .filter-row{ padding:9px 8px 9px 14px; }
     .filter-opt{ min-height:48px; }
+    /* a finger-sized target around the grip dots */
+    .section-head .grip{ box-sizing:content-box; padding:12px 10px; margin:-12px -4px -12px -10px; }
     .selection-bar{ padding:13px 14px; font-size:12.5px; }
     .charts{ padding:0 14px 20px; }
 
@@ -2226,14 +2229,14 @@
       .join('');
 
     document.getElementById('sheetChips').innerHTML = chips('sheet-chip');
-    // only while a filter is narrowing the list do the chips mark which categories it keeps
+    // categories the filter keeps; a filtered-out category never takes its tint
     const fOpts = Array.from(document.querySelectorAll('#filterMenu .filter-opt[data-filter]'));
     const kept = fOpts.filter(o => o.querySelector('.fbox').classList.contains('checked')).map(o => o.dataset.filter);
-    const filtering = kept.length < fOpts.length;
     document.getElementById('mapChips').innerHTML = Array.from(document.querySelectorAll('#layers .section'))
       .map(sec => {
-        const hl = filtering && kept.includes(sec.dataset.section);
         const on = sec.querySelectorAll('.layer-item .checkbox.checked').length;
+        // same rule as the panel: a category with layers switched on takes its tint
+        const hl = on > 0 && kept.includes(sec.dataset.section);
         const name = sec.querySelector('.section-head').textContent.trim();
         return `<button class="map-chip${hl ? ' is-on' : ''}" aria-pressed="${hl}" data-goto="${sec.dataset.section}">${name}${on ? ` <b>${on}</b>` : ''}</button>`;
       }).join('');
@@ -2924,14 +2927,73 @@
     section.addEventListener('drop', e => {
       if(!dragged || dragged === section) return;
       e.preventDefault();
-      const after = section.classList.contains('drop-after');
-      clearDropMarks();
-      layersEl.insertBefore(dragged, after ? section.nextSibling : section);
-      customSectionOrder = Array.from(layersEl.querySelectorAll('.section'));
-      sortMenu.querySelector('.sort-opt[data-sort="custom"]').disabled = false;
-      markSort('custom');
+      dropSection(dragged, section, section.classList.contains('drop-after'));
     });
+
+    // touch: press and hold the grip, then drag (native drag-and-drop is mouse-only)
+    grip.addEventListener('pointerdown', e => {
+      if(e.pointerType === 'mouse') return;
+      const startY = e.clientY;
+      let active = false, target = null, after = false, scrollTimer = null;
+      const hold = setTimeout(() => {
+        active = true;
+        grip.setPointerCapture(e.pointerId);
+        section.classList.add('dragging');
+        layersEl.classList.add('is-dragging');
+        if(navigator.vibrate) navigator.vibrate(12);
+      }, 280);
+      const move = ev => {
+        if(!active){
+          if(Math.abs(ev.clientY - startY) > 8) cleanup();   // it was a scroll, not a hold
+          return;
+        }
+        ev.preventDefault();
+        // mark the nearer edge of whichever other section is under the finger
+        target = null;
+        for(const sec of layersEl.querySelectorAll('.section')){
+          const b = sec.getBoundingClientRect();
+          if(sec !== section && ev.clientY >= b.top && ev.clientY <= b.bottom){
+            target = sec; after = ev.clientY > b.top + b.height / 2; break;
+          }
+        }
+        clearDropMarks();
+        if(target) target.classList.add(after ? 'drop-after' : 'drop-before');
+        // scroll the list when dragging near its top or bottom edge
+        const box = layersEl.getBoundingClientRect();
+        const edge = ev.clientY < box.top + 40 ? -8 : ev.clientY > box.bottom - 40 ? 8 : 0;
+        clearInterval(scrollTimer);
+        if(edge) scrollTimer = setInterval(() => { layersEl.scrollTop += edge; }, 16);
+      };
+      const up = () => {
+        if(active && target) dropSection(section, target, after);
+        cleanup();
+      };
+      function cleanup(){
+        clearTimeout(hold); clearInterval(scrollTimer);
+        section.classList.remove('dragging');
+        layersEl.classList.remove('is-dragging');
+        clearDropMarks();
+        grip.removeEventListener('pointermove', move);
+        grip.removeEventListener('pointerup', up);
+        grip.removeEventListener('pointercancel', cleanup);
+      }
+      grip.addEventListener('pointermove', move);
+      grip.addEventListener('pointerup', up);
+      grip.addEventListener('pointercancel', cleanup);
+    });
+    grip.addEventListener('contextmenu', e => e.preventDefault());
+    // the grip is for moving, so a press on it never folds the section
+    grip.addEventListener('click', e => e.stopPropagation());
   });
+
+  function dropSection(moving, target, after){
+    clearDropMarks();
+    layersEl.insertBefore(moving, after ? target.nextSibling : target);
+    customSectionOrder = Array.from(layersEl.querySelectorAll('.section'));
+    sortMenu.querySelector('.sort-opt[data-sort="custom"]').disabled = false;
+    markSort('custom');
+    syncSheetHead();
+  }
 
   applySort('default');
   // start calm: only the first category (after sorting) is open
