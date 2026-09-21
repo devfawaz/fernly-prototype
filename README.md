@@ -63,7 +63,7 @@ Along the way we:
 
 ## Try it
 
-- **Desktop:** tick layers, adjust a layer's opacity, click a shape on the map for its details, drag a category by its grip to reorder it, filter and sort, collapse the panel with the rail button, and double-click the project name to rename it.
+- **Desktop:** tick layers, adjust a layer's opacity, click a shape on the map for its details, drag a category by its grip to reorder it, filter and sort, switch chart types (Species, Condition, Biodiversity) on the Ecosystem Charts tab, collapse the panel with the rail button, and double-click the project name to rename it.
 - **Mobile:** tap a category chip or a shape on the map, drag or flick the bottom sheet, and press and hold a category to reorder it.
 - **Recordings:** add `?taps` to the URL to show touch indicators when screen-recording.
 
