@@ -74,4 +74,8 @@ python3 -m http.server 8000
 
 Then visit `http://localhost:8000`.
 
+---
+
+© 2026 Muhammed Fawaz. All rights reserved. Shared for portfolio review only; see [LICENSE](LICENSE).
+
 Icons from [Phosphor](https://phosphoricons.com) (MIT licence).
