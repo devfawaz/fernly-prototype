@@ -28,6 +28,7 @@ The dashboard puts environmental data for a project site on a map: protected are
 |---|---|
 | Project details moved into a bar floating over the map | Frees the side panel for the data itself |
 | Layers and charts on separate tabs | Breaks the information into manageable chunks, with less scrolling |
+| A segmented control for chart types (Species, Condition, Biodiversity) | One chart group at a time keeps the panel short; search still shows every matching chart |
 | Categories as nested lists that start collapsed | Progressive disclosure: open only what you need |
 | Active layers shown as chips, coloured by category | See at a glance what's on the map; remove a layer with one tap |
 | Search, filter by category and sort | Get to a specific layer fast as the list grows |
