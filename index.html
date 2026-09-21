@@ -3046,10 +3046,8 @@
   }
 
   applySort('default');
-  // start calm: open only the first category holding a default layer (else the first one)
-  const secs = Array.from(document.querySelectorAll('#layers .section'));
-  const lead = secs.find(sec => sec.querySelector('.layer-item .checkbox.checked')) || secs[0];
-  secs.forEach(sec => sec.classList.toggle('collapsed', sec !== lead));
+  // start calm: every category collapsed; active layers show as chips under their heading
+  document.querySelectorAll('#layers .section').forEach(sec => sec.classList.add('collapsed'));
   syncFold();
   updateLegend();
   renderChips();
