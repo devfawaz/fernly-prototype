@@ -1014,6 +1014,18 @@
   .icon-rail .rail-item.active .rail-item-label,
   .icon-rail.collapsed .rail-item.active .rail-item-label{ color:var(--green); font-weight:600; }
 
+  /* desktop: active layers and categories keep only a thicker colour edge, no tint */
+  @media (min-width: 861px){
+    .layer-item.checked-on{
+      background:#F5F6F7;
+      box-shadow:inset 4px 0 0 var(--layer-color, var(--green));
+    }
+    .section.collapsed.has-active{
+      background:var(--white);
+      box-shadow:inset 4px 0 0 var(--layer-color, var(--green));
+    }
+  }
+
   /* phone — map owns the screen, panel becomes a draggable bottom sheet */
   .sheet-grab, .sheet-head, .sheet-chips, .m-header, .m-nav, .map-chips, .m-back, .m-search-slot{ display:none; }
 
