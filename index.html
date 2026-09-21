@@ -376,6 +376,7 @@
     text-align:left; cursor:pointer;
   }
   .sort-opt + .sort-opt{ border-top:1px solid var(--border); }
+  .sort-opt[hidden]{ display:none; }
   .sort-opt:hover{ background:var(--gray-100); }
   .sort-opt.is-on{ background:var(--green-light); color:var(--green); font-weight:600; }
   .opt-ico{ width:17px; height:17px; flex:none; color:var(--gray-500); }
@@ -1391,7 +1392,7 @@
               <button class="sort-opt is-on" data-sort="default"><svg class="opt-ico" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></svg>Default</button>
               <button class="sort-opt" data-sort="az"><svg class="opt-ico" viewBox="0 0 256 256" fill="currentColor"><path d="M128,128a8,8,0,0,1-8,8H48a8,8,0,0,1,0-16h72A8,8,0,0,1,128,128ZM48,72H184a8,8,0,0,0,0-16H48a8,8,0,0,0,0,16Zm56,112H48a8,8,0,0,0,0,16h56a8,8,0,0,0,0-16Zm125.66-21.66a8,8,0,0,0-11.32,0L192,188.69V112a8,8,0,0,0-16,0v76.69l-26.34-26.35a8,8,0,0,0-11.32,11.32l40,40a8,8,0,0,0,11.32,0l40-40A8,8,0,0,0,229.66,162.34Z"/></svg>A–Z</button>
               <button class="sort-opt" data-sort="za"><svg class="opt-ico" viewBox="0 0 256 256" fill="currentColor"><path d="M40,128a8,8,0,0,1,8-8h72a8,8,0,0,1,0,16H48A8,8,0,0,1,40,128Zm8-56h56a8,8,0,0,0,0-16H48a8,8,0,0,0,0,16ZM184,184H48a8,8,0,0,0,0,16H184a8,8,0,0,0,0-16ZM229.66,82.34l-40-40a8,8,0,0,0-11.32,0l-40,40a8,8,0,0,0,11.32,11.32L176,67.31V144a8,8,0,0,0,16,0V67.31l26.34,26.35a8,8,0,0,0,11.32-11.32Z"/></svg>Z–A</button>
-              <button class="sort-opt" data-sort="custom" disabled><svg class="opt-ico" viewBox="0 0 256 256" fill="currentColor"><path d="M104,60A12,12,0,1,1,92,48,12,12,0,0,1,104,60Zm60,12a12,12,0,1,0-12-12A12,12,0,0,0,164,72ZM92,116a12,12,0,1,0,12,12A12,12,0,0,0,92,116Zm72,0a12,12,0,1,0,12,12A12,12,0,0,0,164,116ZM92,184a12,12,0,1,0,12,12A12,12,0,0,0,92,184Zm72,0a12,12,0,1,0,12,12A12,12,0,0,0,164,184Z"/></svg>Custom</button>
+              <button class="sort-opt" data-sort="custom" hidden><svg class="opt-ico" viewBox="0 0 256 256" fill="currentColor"><path d="M104,60A12,12,0,1,1,92,48,12,12,0,0,1,104,60Zm60,12a12,12,0,1,0-12-12A12,12,0,0,0,164,72ZM92,116a12,12,0,1,0,12,12A12,12,0,0,0,92,116Zm72,0a12,12,0,1,0,12,12A12,12,0,0,0,164,116ZM92,184a12,12,0,1,0,12,12A12,12,0,0,0,92,184Zm72,0a12,12,0,1,0,12,12A12,12,0,0,0,164,184Z"/></svg>Custom</button>
             </div>
           </div>
           <button class="icon-act fold-btn" id="foldBtn" aria-label="Collapse all">
@@ -3033,7 +3034,8 @@
     clearDropMarks();
     layersEl.insertBefore(moving, after ? target.nextSibling : target);
     customSectionOrder = Array.from(layersEl.querySelectorAll('.section'));
-    sortMenu.querySelector('.sort-opt[data-sort="custom"]').disabled = false;
+    // "Custom" only exists once the user has made their own order
+    sortMenu.querySelector('.sort-opt[data-sort="custom"]').hidden = false;
     markSort('custom');
     syncSheetHead();
   }
