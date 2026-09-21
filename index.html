@@ -429,7 +429,7 @@
   .section-head .grip:hover{ color:var(--gray-700); }
   .section-head:hover .grip{ color:var(--gray-500); }
   .section-head .grip:active{ cursor:grabbing; }
-  .section-head .grip{ touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+  .section-head{ -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
   .section.dragging .section-head .grip{ color:var(--green); }
   .section-head{
     display:flex;
@@ -2930,21 +2930,32 @@
       dropSection(dragged, section, section.classList.contains('drop-after'));
     });
 
-    // touch: press and hold the grip, then drag (native drag-and-drop is mouse-only)
-    grip.addEventListener('pointerdown', e => {
+    // touch: press and hold anywhere on the header, then drag (native drag-and-drop is mouse-only)
+    const head = section.querySelector('.section-head');
+    let reordering = false, suppressClick = false;
+    // once the hold has started a reorder, the list must not scroll under the finger
+    head.addEventListener('touchmove', e => { if(reordering) e.preventDefault(); }, { passive:false });
+    head.addEventListener('contextmenu', e => { if(e.pointerType !== 'mouse') e.preventDefault(); });
+    // a drag ends with a click on the header; don't let it fold the section
+    section.addEventListener('click', e => {
+      if(suppressClick){ e.stopPropagation(); suppressClick = false; }
+    }, true);
+
+    head.addEventListener('pointerdown', e => {
       if(e.pointerType === 'mouse') return;
-      const startY = e.clientY;
+      const startY = e.clientY, startX = e.clientX;
       let active = false, target = null, after = false, scrollTimer = null;
       const hold = setTimeout(() => {
-        active = true;
-        grip.setPointerCapture(e.pointerId);
+        active = reordering = true;
+        head.setPointerCapture(e.pointerId);
         section.classList.add('dragging');
         layersEl.classList.add('is-dragging');
         if(navigator.vibrate) navigator.vibrate(12);
       }, 280);
       const move = ev => {
         if(!active){
-          if(Math.abs(ev.clientY - startY) > 8) cleanup();   // it was a scroll, not a hold
+          // moving before the hold completes means a scroll or swipe, not a reorder
+          if(Math.abs(ev.clientY - startY) > 8 || Math.abs(ev.clientX - startX) > 8) cleanup();
           return;
         }
         ev.preventDefault();
@@ -2965,21 +2976,26 @@
         if(edge) scrollTimer = setInterval(() => { layersEl.scrollTop += edge; }, 16);
       };
       const up = () => {
-        if(active && target) dropSection(section, target, after);
+        if(active){
+          suppressClick = true;
+          setTimeout(() => { suppressClick = false; }, 400);
+          if(target) dropSection(section, target, after);
+        }
         cleanup();
       };
       function cleanup(){
+        reordering = false;
         clearTimeout(hold); clearInterval(scrollTimer);
         section.classList.remove('dragging');
         layersEl.classList.remove('is-dragging');
         clearDropMarks();
-        grip.removeEventListener('pointermove', move);
-        grip.removeEventListener('pointerup', up);
-        grip.removeEventListener('pointercancel', cleanup);
+        head.removeEventListener('pointermove', move);
+        head.removeEventListener('pointerup', up);
+        head.removeEventListener('pointercancel', cleanup);
       }
-      grip.addEventListener('pointermove', move);
-      grip.addEventListener('pointerup', up);
-      grip.addEventListener('pointercancel', cleanup);
+      head.addEventListener('pointermove', move);
+      head.addEventListener('pointerup', up);
+      head.addEventListener('pointercancel', cleanup);
     });
     grip.addEventListener('contextmenu', e => e.preventDefault());
     // the grip is for moving, so a press on it never folds the section
