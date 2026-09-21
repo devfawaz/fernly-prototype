@@ -31,6 +31,7 @@ The dashboard puts environmental data for a project site on a map: protected are
 | Categories as nested lists that start collapsed | Progressive disclosure: open only what you need |
 | Active layers shown as chips, coloured by category | See at a glance what's on the map; remove a layer with one tap |
 | Search, filter by category and sort | Get to a specific layer fast as the list grows |
+| Click a map shape for a details card: layer, category, whether it is on site, and a link to view it in the panel | Connects the map and the list, so users can go from "what is this?" to its full details in one step |
 | "On site" tags and a hint about intersecting layers | Surfaces what actually affects this site first |
 | Risk-first defaults: a new project switches on up to 3 layers that intersect the site, regulatory triggers (threatened communities, protected areas, species) before footprint constraints (flood, contamination) | The first view answers "could anything stop or change this project?", and a site with no compliance hits says so |
 
@@ -58,8 +59,8 @@ Along the way we:
 
 ## Try it
 
-- **Desktop:** tick layers, filter and sort, collapse the panel with the rail button, and double-click the project name to rename it.
-- **Mobile:** tap a category chip, then drag or flick the bottom sheet.
+- **Desktop:** tick layers, click a shape on the map for its details, filter and sort, collapse the panel with the rail button, and double-click the project name to rename it.
+- **Mobile:** tap a category chip or a shape on the map, drag or flick the bottom sheet, and press and hold a category to reorder it.
 - **Recordings:** add `?taps` to the URL to show touch indicators when screen-recording.
 
 It's a single static `index.html` with no build step. To run it locally:
