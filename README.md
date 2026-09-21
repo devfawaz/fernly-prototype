@@ -32,6 +32,7 @@ The dashboard puts environmental data for a project site on a map: protected are
 | Active layers shown as chips, coloured by category | See at a glance what's on the map; remove a layer with one tap |
 | Search, filter by category and sort | Get to a specific layer fast as the list grows |
 | "On site" tags and a hint about intersecting layers | Surfaces what actually affects this site first |
+| Risk-first defaults: a new project switches on up to 3 layers that intersect the site, regulatory triggers (threatened communities, protected areas, species) before footprint constraints (flood, contamination) | The first view answers "could anything stop or change this project?", and a site with no compliance hits says so |
 
 **3. Mobile.** The original challenge was desktop only. Here the map comes first:
 - a floating search bar

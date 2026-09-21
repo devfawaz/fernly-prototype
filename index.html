@@ -2701,12 +2701,35 @@
     cb.addEventListener('click', dismissHint, { once: true });
   });
 
-  // three on-site layers that frame the site: the asset, the planning envelope
-  // and the constraint a renewal precinct turns on
-  ['vegetation', 'flood', 'contaminated'].forEach(key => {
-    const item = document.querySelector('.layer-item[data-layer="' + key + '"]');
-    setLayerChecked(item, true);
-  });
+  // a new project opens on its risks: layers that could legally or materially affect
+  // the site, and only if they intersect it — regulatory triggers first, then
+  // constraints on the footprint. Descriptive context stays off. Capped at three.
+  const DEFAULT_PRIORITY = [
+    'threatened', 'protected', 'indigenous', 'biodiversity', 'species',   // compliance
+    'flood', 'contaminated', 'heritage', 'acid', 'bushfire',             // development constraints
+  ];
+  const COMPLIANCE = new Set(DEFAULT_PRIORITY.slice(0, 5));
+  const defaults = DEFAULT_PRIORITY
+    .map(key => document.querySelector('.layer-item[data-layer="' + key + '"]'))
+    .filter(item => item && item.dataset.onsite === '1')
+    .slice(0, 3);
+  defaults.forEach(item => setLayerChecked(item, true));
+
+  // the hint says why these are on — and that a clear compliance check is itself a finding
+  (function(){
+    const byCategory = {};
+    defaults.forEach(item => {
+      const name = item.closest('.section').querySelector('.section-head').textContent.trim();
+      byCategory[name] = (byCategory[name] || 0) + 1;
+    });
+    const parts = Object.entries(byCategory).map(([name, n]) => `${n} ${name.toLowerCase()}`);
+    const clear = !defaults.some(item => COMPLIANCE.has(item.dataset.layer));
+    const lead = defaults.length
+      ? `Showing ${defaults.length} layer${defaults.length === 1 ? '' : 's'} that intersect this site: ${parts.join(', ')}.`
+      : 'Showing the site boundary only.';
+    const hint = document.getElementById('mapHint');
+    hint.firstChild.textContent = lead + (clear ? ' No protected or threatened areas are on site.' : ' Tick more to compare.') + ' ';
+  })();
 
   // rail button opens and closes the layer panel
   const railToggle = document.getElementById('railToggle');
@@ -3023,8 +3046,10 @@
   }
 
   applySort('default');
-  // start calm: only the first category (after sorting) is open
-  document.querySelectorAll('#layers .section').forEach((sec, i) => sec.classList.toggle('collapsed', i > 0));
+  // start calm: open only the first category holding a default layer (else the first one)
+  const secs = Array.from(document.querySelectorAll('#layers .section'));
+  const lead = secs.find(sec => sec.querySelector('.layer-item .checkbox.checked')) || secs[0];
+  secs.forEach(sec => sec.classList.toggle('collapsed', sec !== lead));
   syncFold();
   updateLegend();
   renderChips();
