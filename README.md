@@ -33,6 +33,7 @@ The dashboard puts environmental data for a project site on a map: protected are
 | Search, filter by category and sort | Get to a specific layer fast as the list grows |
 | Click a map shape for a details card: layer, category, whether it is on site, and a link to view it in the panel | Connects the map and the list, so users can go from "what is this?" to its full details in one step |
 | Opacity slider per layer | Overlapping layers stay readable; fade context to let a key layer stand out |
+| Drag categories into your own order; a "Custom" sort appears only once you do | People work in different orders, and the option only shows up when it means something |
 | "On site" tags and a hint about intersecting layers | Surfaces what actually affects this site first |
 | Risk-first defaults: a new project switches on up to 3 layers that intersect the site, regulatory triggers (threatened communities, protected areas, species) before footprint constraints (flood, contamination) | The first view answers "could anything stop or change this project?", and a site with no compliance hits says so |
 
@@ -40,6 +41,7 @@ The dashboard puts environmental data for a project site on a map: protected are
 - a floating search bar
 - category chips that jump straight to a section
 - a draggable bottom sheet with three resting positions and flick gestures
+- press and hold anywhere on a category header, then drag, to reorder categories (the desktop grip handles are mouse-only, so touch has its own long-press gesture)
 
 ## Built with Claude Code
 
@@ -60,7 +62,7 @@ Along the way we:
 
 ## Try it
 
-- **Desktop:** tick layers, click a shape on the map for its details, filter and sort, collapse the panel with the rail button, and double-click the project name to rename it.
+- **Desktop:** tick layers, adjust a layer's opacity, click a shape on the map for its details, drag a category by its grip to reorder it, filter and sort, collapse the panel with the rail button, and double-click the project name to rename it.
 - **Mobile:** tap a category chip or a shape on the map, drag or flick the bottom sheet, and press and hold a category to reorder it.
 - **Recordings:** add `?taps` to the URL to show touch indicators when screen-recording.
 
