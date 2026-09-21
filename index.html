@@ -1014,9 +1014,8 @@
   .icon-rail .rail-item.active .rail-item-label,
   .icon-rail.collapsed .rail-item.active .rail-item-label{ color:var(--green); font-weight:600; }
 
-  /* desktop: active layers and categories keep their tint with a thicker colour edge */
+  /* desktop: a collapsed category with active layers gets a thicker colour edge */
   @media (min-width: 861px){
-    .layer-item.checked-on,
     .section.collapsed.has-active{
       box-shadow:inset 4px 0 0 var(--layer-color, var(--green));
     }
