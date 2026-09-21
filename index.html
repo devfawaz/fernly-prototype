@@ -1139,8 +1139,8 @@
       left:0; right:0; top:auto;
       bottom:calc(var(--navh) + env(safe-area-inset-bottom));
       width:auto; min-width:0;
-      /* fully open, the sheet reaches the header and covers search + chips */
-      height:calc(100dvh - var(--headerh) - var(--navh) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      /* fully open, the sheet's top lines up with the top of the search bar */
+      height:calc(100dvh - var(--headerh) - 10px - var(--navh) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
       z-index:28;
       border-right:none;
       border-radius:18px 18px 0 0;
@@ -1170,6 +1170,8 @@
       gap:10px;
       padding:4px 16px 10px;
       flex:none;
+      touch-action:none;
+      cursor:grab;
     }
 
     /* the peek carries the active layers, not just a search box */
@@ -1198,13 +1200,13 @@
     .sheet-title{ font-size:16px; font-weight:700; color:var(--ink); }
     .sheet-meta{ font-size:12.5px; color:var(--gray-500); white-space:nowrap; }
 
-    /* the toolbar sits in the peek so filtering never needs a drag first */
+    /* same order as desktop: tabs, then the filter / sort / expand row */
     .sidebar{ display:flex; flex-direction:column; }
     .sheet-grab{ order:1; }
     .sheet-head{ order:2; }
     .sheet-chips{ order:3; }
-    .filter-row{ order:4; }
-    .tabs{ order:5; }
+    .tabs{ order:4; }
+    .filter-row{ order:5; }
     .search-wrap{ order:6; }
     .layers, .charts{ order:7; }
     .selection-bar{ order:8; }
@@ -2726,14 +2728,6 @@
     sheet.style.transform = '';
   }
 
-  // tapping the handle steps up, and back to peek from the top
-  grab.addEventListener('click', e => {
-    if(!isMobile() || e.detail === 0) return;
-    setSnap(snapIndex >= SNAPS.length - 1 ? 0 : snapIndex + 1);
-  });
-
-  let dragFrom = null, dragStartY = 0, sheetH = 0;
-
   // the sheet's current offset from fully open, in px
   const sheetOffset = () => new DOMMatrixReadOnly(getComputedStyle(sheet).transform).m42;
   // rest offsets for peek, mid and full, read from the CSS so drag and tap agree
@@ -2750,40 +2744,72 @@
     return out;
   }
 
-  grab.addEventListener('pointerdown', e => {
+  // drag from the handle or the heading; a tap on the handle steps through the stops
+  const handles = [grab, sheet.querySelector('.sheet-head')];
+  let drag = null;
+
+  handles.forEach(h => h.addEventListener('pointerdown', e => {
     if(!isMobile()) return;
-    grab.setPointerCapture(e.pointerId);
-    sheetH = sheet.getBoundingClientRect().height;
-    dragStartY = e.clientY;
-    dragFrom = sheetOffset();
+    h.setPointerCapture(e.pointerId);
+    // pin the sheet where it is before measuring, so no transition skews the reading
+    const from = sheetOffset();
     sheet.classList.add('dragging');
-  });
+    sheet.style.transform = 'translateY(' + from + 'px)';
+    const stops = snapOffsets();
+    drag = { h, startY:e.clientY, from, stops, moved:false,
+             samples:[{ y:e.clientY, t:e.timeStamp }] };
+    sheet.classList.add('dragging');
+  }));
 
-  grab.addEventListener('pointermove', e => {
-    if(dragFrom === null) return;
-    const y = Math.min(sheetH, Math.max(0, dragFrom + (e.clientY - dragStartY)));
+  function onMove(e){
+    if(!drag) return;
+    const dy = e.clientY - drag.startY;
+    if(Math.abs(dy) > 4) drag.moved = true;
+    let y = drag.from + dy;
+    const min = 0, max = drag.stops[0];
+    // resist past either end instead of stopping dead
+    if(y < min) y = min - Math.sqrt(min - y) * 3;
+    if(y > max) y = max + Math.sqrt(y - max) * 3;
     sheet.style.transform = 'translateY(' + y + 'px)';
-  });
+    drag.samples.push({ y:e.clientY, t:e.timeStamp });
+    if(drag.samples.length > 5) drag.samples.shift();
+  }
 
-  function endDrag(e){
-    if(dragFrom === null) return;
-    const y = Math.max(0, dragFrom + (e.clientY - dragStartY));
-    dragFrom = null;
-    // snap to whichever rest position the sheet was released nearest
-    const targets = snapOffsets();
+  function onEnd(e){
+    if(!drag) return;
+    const d = drag; drag = null;
+    const y = sheetOffset();
     sheet.classList.remove('dragging');
-    let best = 0;
-    targets.forEach((t, i) => {
-      if(Math.abs(t - y) < Math.abs(targets[best] - y)) best = i;
-    });
+    if(!d.moved){
+      sheet.style.transform = '';
+      if(d.h === grab) setSnap(snapIndex >= SNAPS.length - 1 ? 0 : snapIndex + 1);
+      return;
+    }
+    const a = d.samples[0], b = d.samples[d.samples.length - 1];
+    const v = (b.y - a.y) / Math.max(1, b.t - a.t);   // px per ms, + is downward
+    // a flick moves one stop in its direction; otherwise land on the nearest stop
+    let best;
+    if(Math.abs(v) > 0.5){
+      // nearest stop past the release point, in the flick's direction
+      const ahead = [0, 1, 2].filter(k => v < 0 ? d.stops[k] < y - 1 : d.stops[k] > y + 1);
+      best = ahead.length
+        ? ahead.reduce((m, k) => Math.abs(d.stops[k] - y) < Math.abs(d.stops[m] - y) ? k : m)
+        : (v < 0 ? 2 : 0);
+    } else {
+      best = 0;
+      d.stops.forEach((t, i) => { if(Math.abs(t - y) < Math.abs(d.stops[best] - y)) best = i; });
+    }
     setSnap(best);
   }
-  grab.addEventListener('pointerup', endDrag);
-  grab.addEventListener('pointercancel', endDrag);
+  handles.forEach(h => {
+    h.addEventListener('pointermove', onMove);
+    h.addEventListener('pointerup', onEnd);
+    h.addEventListener('pointercancel', onEnd);
+  });
 
   // interacting with the panel while it is down pulls it up
   sheet.addEventListener('pointerdown', e => {
-    if(isMobile() && snapIndex === 0 && !grab.contains(e.target)) setSnap(1);
+    if(isMobile() && snapIndex === 0 && !handles.some(h => h.contains(e.target))) setSnap(1);
   });
 
   window.addEventListener('resize', () => { if(!isMobile()) setSnap(0); });
