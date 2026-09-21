@@ -2681,24 +2681,12 @@
   document.querySelectorAll('.layer-item .checkbox').forEach(cb => {
     cb.addEventListener('click', dismissHint, { once: true });
   });
-  // open the sections with the most on-site content — relevance, not authoring order
-  const byRelevance = Array.from(document.querySelectorAll('.section'))
-    .map(sec => ({
-      sec,
-      hits: sec.querySelectorAll('.layer-item[data-onsite="1"]').length,
-      order: +sec.dataset.baseOrder,
-    }))
-    .filter(x => x.hits > 0)
-    .sort((a, b) => b.hits - a.hits || a.order - b.order);
-
-  byRelevance.slice(0, 3).forEach(x => x.sec.classList.remove('collapsed'));
 
   // three on-site layers that frame the site: the asset, the planning envelope
   // and the constraint a renewal precinct turns on
   ['vegetation', 'flood', 'contaminated'].forEach(key => {
     const item = document.querySelector('.layer-item[data-layer="' + key + '"]');
     setLayerChecked(item, true);
-    item.closest('.section').classList.remove('collapsed');
   });
 
   // rail button opens and closes the layer panel
@@ -2938,6 +2926,9 @@
   });
 
   applySort('default');
+  // start calm: only the first category (after sorting) is open
+  document.querySelectorAll('#layers .section').forEach((sec, i) => sec.classList.toggle('collapsed', i > 0));
+  syncFold();
   updateLegend();
   renderChips();
   syncReset();
